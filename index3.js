@@ -8,6 +8,7 @@ let num_seconda_carta;
 let num_prima_carta;
 let assicurazione = 0;
 let boolassicurazione;
+let boolAssoAlBanco;
 //se clicco l'immagine di sfondo del body smettendo di giocare non mi refrescia la pagina quindi ritornare a giocare. perchè?
 window.addEventListener("load", function () {
     // Chiamata alla funzione per richiedere i soldi
@@ -91,7 +92,7 @@ function inizializzaBancoEPrimacarta(div_pers, img, img1pers) {
         return;
     }
 
-    let num_carta = 1;
+    let num_carta = generaNum_Carta();
     let simbolo_carta = generaSimbolo_carta();
     let aus = generaStringSimbolo(simbolo_carta);
 
@@ -110,7 +111,8 @@ function inizializzaBancoEPrimacarta(div_pers, img, img1pers) {
     }
     else if (num_carta === 1) {
         cntCarteBanco = 11;
-        richiediAssicurazione();
+        boolAssoAlBanco = true;
+        boolassicurazione = true;
     }
     else
         cntCarteBanco = num_carta;
@@ -168,18 +170,14 @@ function richiediValAssi(str) {
 }
 
 function richiediAssicurazione() {
-    const risposta = confirm("Abbiamo pescato un asso come carta del banco, Vuoi fare l'assicurazione?");
-    if (risposta) {
-        alert("Hai scelto di fare l'assicurazione.");
-        // Qui puoi aggiungere il codice per gestire la scelta dell'assicurazione
-        assicurazione = puntata / 2;
-        console.log("ecco la tua assicurazione: " + assicurazione);
-        boolassicurazione = true;
-
-    } else {
-        alert("Hai scelto di non fare l'assicurazione.");
-        // Qui puoi gestire il caso in cui l'utente non voglia l'assicurazione
-    }
+    let cosaFaccio = document.getElementById("cosaFaccio");
+    alert("Hai scelto di fare l'assicurazione.");
+    // Qui puoi aggiungere il codice per gestire la scelta dell'assicurazione
+    assicurazione = puntata / 2;
+    console.log("ecco la tua assicurazione: " + assicurazione);
+    boolassicurazione = true;
+    // Rimuovi il bottone cliccato
+    cosaFaccio.removeChild(this);
 }
 
 /*GETTONI */
@@ -304,8 +302,8 @@ function punteggio(num_carta) {//persona
     }
 }
 
-
 function punteggioBanco(num_carta) {
+    let ris = document.getElementById("esito");
     // Supponiamo che num_carta sia il valore della carta attuale
     if (num_carta >= 10) {
         cntCarteBanco += 10;
@@ -317,11 +315,12 @@ function punteggioBanco(num_carta) {
     p_Punti_banco.innerText = "il Banco: " + cntCarteBanco;
 
     if (cntCarteBanco > 21) {
-        console.log("ha perso");
-        aggiornaPortafoglio(vittoria = true)
+        ris.innerText = "hai vinto";
+        inserisciBtnManoOSmetti();
+        console.log("quarto");
     } else if (cntCarteBanco === 21) {
-        console.log("ha vinto");
-        aggiornaPortafoglio(vinto = false);
+        ris.innerText = "hai perso";
+        inserisciBtnManoOSmetti();
     } else {
         console.log("prosegui banco");
         // Logica per decidere se il banco deve pescare un'altra carta
@@ -331,21 +330,55 @@ function punteggioBanco(num_carta) {
         } else {
             console.log("Il banco non può pescare altre carte.");
             if (cntCarteBanco > cntCartePersona) {
-                aggiornaPortafoglio(vittoria = false);
+                ris.innerText = "hai perso";
+                inserisciBtnManoOSmetti();
             }
             else if (cntCarteBanco < cntCartePersona) {
-                aggiornaPortafoglio(vittoria = true);
+                ris.innerText = "hai vinto";
+                inserisciBtnManoOSmetti();
+                console.log("quinto");
             } else if (cntCarteBanco === cntCartePersona) {
-                aggiornaPortafoglio(vittoria = false);
+                ris.innerText = "hai perso";
+                inserisciBtnManoOSmetti();
             }
         }
+    }
+}
+
+function inserisciBtnManoOSmetti() {
+    let div = document.getElementById("cosaFaccio");
+
+    if (soldiNelPortafoglio > 0) {
+        setTimeout(() => {
+            if (!document.getElementById("mano")) {
+                let btnMano = document.createElement("button");
+                btnMano.innerHTML = "Gioca un'altra mano";
+                btnMano.id = "mano";
+                btnMano.className = "bottone";
+                div.appendChild(btnMano);
+                btnMano.addEventListener("click", nuovaPartita); // Aggiungi l'evento qui
+            }
+
+            // Crea e aggiungi il bottone "Smetti di giocare" solo se non esiste
+            if (!document.getElementById("smetti_di_giocare")) {
+                let btnSmettiDiGiocare = document.createElement("button");
+                btnSmettiDiGiocare.innerHTML = "Smetti di giocare";
+                btnSmettiDiGiocare.id = "smetti_di_giocare";
+                btnSmettiDiGiocare.className = "bottone";
+                div.appendChild(btnSmettiDiGiocare);
+                btnSmettiDiGiocare.addEventListener("click", smettiDiGiocare); // Aggiungi l'evento qui
+            }
+            inserisciBtnManoOSmetti();
+        }, 1000);
+    } else {
+        alert("mi dispiace, non hai più soldi da puntare nel tuo portafoglio");
     }
 }
 
 function aggiornaPortafoglio(vinto, bj) {
     console.log(puntata);
     console.log(vinto);
-    console.log(soldiNelPortafoglio);
+    console.log("soldi"+soldiNelPortafoglio);
     if (!vinto) {
         soldiNelPortafoglio -= puntata;
     } else {
@@ -357,6 +390,7 @@ function aggiornaPortafoglio(vinto, bj) {
     gettoni.forEach(gettone => {
         gettone.remove(); // Rimuove l'elemento dal DOM
     });
+
     let puntatamezza = puntata / 2;
     let puntataBJ = puntata + puntatamezza;
     if (bj) {
@@ -390,6 +424,7 @@ function aggiornaPortafoglio(vinto, bj) {
     } else {
         alert("mi dispiace, non hai più soldi da puntare nel tuo portafoglio");
     }
+    
 }
 
 /*SMETTI DI GIOCARE O CONTINUA A GIOCARE */
@@ -425,7 +460,8 @@ function smettiDiGiocare() {
     function nuovaPartita() {
         console.log("hai cliccato il bottone nuova mano");
         let btnMano = document.getElementById("mano");
-        let stop = document.getElementById("smetti_di_giocare")
+        let stop = document.getElementById("smetti_di_giocare");
+        console.log(btnMano);
         // Rimuovere il pulsante cliccato
         if (btnMano != null) btnMano.remove();
         else return;
@@ -474,37 +510,55 @@ function smettiDiGiocare() {
 
     function btnSceltaFermati() {
         let divFermoONo = document.getElementById("cosaFaccio");
-
+        let btnAsssicurazione = null; // Inizializza a null
+    
+        if (boolAssoAlBanco && boolassicurazione) {
+            btnAsssicurazione = document.createElement("button");
+            btnAsssicurazione.textContent = "Assicurazione";
+            btnAsssicurazione.id = "assicurazione";
+            btnAsssicurazione.className = "bottone";
+            btnAsssicurazione.addEventListener("click", richiediAssicurazione);
+            divFermoONo.appendChild(btnAsssicurazione);
+        }
         // Crea il bottone "fermati"
         let btnStop = document.createElement("button");
         btnStop.textContent = "fermati";
         btnStop.id = "stop";
-        btnStop.className="bottone";
+        btnStop.className = "bottone";
         divFermoONo.appendChild(btnStop);
-
+    
         // Crea il bottone "Richiedi un'altra carta"
         let btnAvanti = document.createElement("button");
         btnAvanti.textContent = "Richiedi un'altra carta";
         btnAvanti.id = "avanti";
-        btnAvanti.className="bottone";
+        btnAvanti.className = "bottone";
         divFermoONo.appendChild(btnAvanti);
-
+    
         // Event listener per il bottone "fermti"
         btnStop.addEventListener("click", function () {
             // Rimuovi entrambi i bottoni
             divFermoONo.removeChild(btnStop);
             divFermoONo.removeChild(btnAvanti);
+    
+            // Rimuovi il bottone "Assicurazione" SE ESISTE
+            if (btnAsssicurazione && divFermoONo.contains(btnAsssicurazione)) {
+                divFermoONo.removeChild(btnAsssicurazione);
+            }
+    
             setTimeout(() => {
                 // Inizia il gioco
                 iniziaGioco();
             }, 1000);
-
         });
-
+    
         // Event listener per il bottone "Richiedi un'altra carta"
         btnAvanti.addEventListener("click", function () {
             // Logica per prendere un'altra carta
             prendiAltraCarta();
+            // Rimuovi il bottone "Assicurazione" SE ESISTE
+            if (btnAsssicurazione && divFermoONo.contains(btnAsssicurazione)) {
+                divFermoONo.removeChild(btnAsssicurazione);
+            }
         });
     }
 
