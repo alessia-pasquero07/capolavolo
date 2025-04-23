@@ -270,3 +270,102 @@ function generaNum_Carta() {
 function random(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
+
+function punteggio(num_carta) {//persona
+    let btnAvanti = document.getElementById("avanti");
+    let btnStop = document.getElementById("stop");
+    let divFermoONo = document.getElementById("cosaFaccio");
+    let ris = document.getElementById("esito");
+    let vinto;//bool
+    // Supponiamo che num_carta sia il valore della carta attuale
+    // Uniamo la logica di cntCartePersona qui
+    if (num_carta >= 10) {
+        cntCartePersona += 10;
+    } else if (num_carta === 1) {
+        cntCartePersona += richiediValAssi("Il tuo asso vuoi che valga 1 o 11?");
+    } else {
+        cntCartePersona += num_carta;
+    }
+    if (cntCartePersona > 21) {
+        ris.innerText = "hai perso";
+        aggiornaPortafoglio(vinto = false, bj = false);
+        if(btnAvanti)
+        divFermoONo.appendChild(btnAvanti);
+    }
+    else {
+        if (cntCartePersona === 21) {
+            if (num_prima_carta === 1 || (num_carta === 10 || num_carta === 11 || num_carta === 12 || num_carta === 13)) {
+                ris.innerText = "hai fatto BlackJack!";
+                console.log("primo");
+                aggiornaPortafoglio(vinto = true, bj = true);
+            } else if (num_seconda_carta === 1 || (num_carta === 10 || num_carta === 11 || num_carta === 12 || num_carta === 13)) {
+                ris.innerText = "hai fatto BlackJack!";
+                console.log("secondo");
+            }
+            else {
+                ris.innerText = "hai vinto";
+                console.log("terzo");
+                aggiornaPortafoglio(vinto = true, bj = false);
+            }
+            if (btnAvanti != null) btnAvanti.remove();
+                else return;
+                if (btnStop != null) btnStop.remove();
+                else return;
+        }
+
+    }
+}
+
+function btnSceltaFermati() {
+    let divFermoONo = document.getElementById("cosaFaccio");
+    if (boolAssoAlBanco && boolassicurazione) {
+        let btnAsssicurazione = document.createElement("button");
+        btnAsssicurazione.textContent = "Assicurazione";
+        btnAsssicurazione.id = "assicurazione";
+        btnAsssicurazione.className = "bottone";
+        btnAsssicurazione.addEventListener("click", richiediAssicurazione);
+        divFermoONo.appendChild(btnAsssicurazione);
+    }
+
+    // Crea il bottone "fermati"
+    if (!bj) {
+        let btnStop = document.createElement("button");
+        btnStop.textContent = "fermati";
+        btnStop.id = "stop";
+        btnStop.className = "bottone";
+        divFermoONo.appendChild(btnStop);
+
+        // Crea il bottone "Richiedi un'altra carta"
+        let btnAvanti = document.createElement("button");
+        btnAvanti.textContent = "Richiedi un'altra carta";
+        btnAvanti.id = "avanti";
+        btnAvanti.className = "bottone";
+        divFermoONo.appendChild(btnAvanti);
+        // Event listener per il bottone "fermti"
+        btnStop.addEventListener("click", function () {
+            // Rimuovi entrambi i bottoni
+            divFermoONo.removeChild(btnStop);
+            divFermoONo.removeChild(btnAvanti);
+            setTimeout(() => {
+                // Inizia il gioco
+                iniziaGioco();
+            }, 1000);
+            let ass = document.getElementById("assicurazione");
+            if (ass) {
+                divFermoONo.removeChild(ass);
+            }
+        });
+
+        // Event listener per il bottone "Richiedi un'altra carta"
+        btnAvanti.addEventListener("click", function () {
+            // Logica per prendere un'altra carta
+            prendiAltraCarta();
+            let ass = document.getElementById("assicurazione");
+            if (ass) {
+                divFermoONo.removeChild(ass);
+            }
+        });
+    }
+
+
+}
