@@ -1,0 +1,123 @@
+#bancone {
+    background-image: url(img/tavolo.jpg);
+    background-repeat: no-repeat;
+    /* Non ripete l'immagine */
+    background-size: cover;
+    /* Estende l'immagine per coprire l'intero elemento */
+    background-position: center;
+    /* Centra l'immagine all'interno del div */
+    width: 652px;
+    height: 394px;
+    /* Aggiungi 'px' per specificare l'unità di misura */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+body{
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+#banco {
+    display: flex;
+    flex-direction: row;
+}
+
+.carta_banco,
+#retro_carta {
+    width: 80px;
+    margin-bottom: 20px;
+}
+
+.carta_persona {
+    /*width: 90px;*/
+    width: 80px;
+    margin-top: 22px;
+}
+
+/*sovrapponi le carte */
+#persona {
+    display: grid;
+    /* Attiva il layout grid */
+    grid-template-columns: auto auto;
+    /* Due colonne */
+    align-items: start;
+    /* Allinea gli elementi in alto */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carta_persona,
+.nuovo_mazzo {
+    margin-left: -60px;
+    /* Sposta la seconda immagine verso sinistra */
+}
+
+
+#banco2 {
+    display: grid;
+    /* Attiva il layout grid */
+    grid-template-columns: auto auto;
+    /* Due colonne */
+    align-items: start;
+    /* Allinea gli elementi in alto */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carta_banco{
+    width: 80px;
+    margin-bottom: 20px;
+    margin-left: -60px;   
+}
+
+header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+footer{
+    padding-top: 20px;
+}
+
+.bottone{
+    padding: 15px 30px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #0598348b; /* un colore vivace */
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    margin-right: 5px;
+}
+
+.bottone:hover{
+    background-color: #03b417;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+}
+.bottone:active{
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+#esito{
+    font-size: 25px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
