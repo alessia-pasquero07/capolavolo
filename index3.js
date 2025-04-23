@@ -375,6 +375,7 @@ function aggiornaPortafoglio(vinto, bj) {
             let btnMano = document.createElement("button");
             btnMano.innerHTML = "Gioca un'altra mano";
             btnMano.id = "mano";
+            btnMano.className="bottone";
             cosaFaccio.appendChild(btnMano);
             btnMano.addEventListener("click", nuovaPartita); // Aggiungi l'evento qui
 
@@ -382,6 +383,7 @@ function aggiornaPortafoglio(vinto, bj) {
             let btnSmettiDiGiocare = document.createElement("button");
             btnSmettiDiGiocare.innerHTML = "Smetti di giocare";
             btnSmettiDiGiocare.id = "smetti_di_giocare";
+            btnSmettiDiGiocare.className="bottone";
             cosaFaccio.appendChild(btnSmettiDiGiocare);
             btnSmettiDiGiocare.addEventListener("click", smettiDiGiocare); // Aggiungi l'evento qui
         }, 1000);
@@ -477,12 +479,14 @@ function smettiDiGiocare() {
         let btnStop = document.createElement("button");
         btnStop.textContent = "fermati";
         btnStop.id = "stop";
+        btnStop.className="bottone";
         divFermoONo.appendChild(btnStop);
 
         // Crea il bottone "Richiedi un'altra carta"
         let btnAvanti = document.createElement("button");
         btnAvanti.textContent = "Richiedi un'altra carta";
         btnAvanti.id = "avanti";
+        btnAvanti.className="bottone";
         divFermoONo.appendChild(btnAvanti);
 
         // Event listener per il bottone "fermti"
