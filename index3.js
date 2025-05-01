@@ -3,7 +3,6 @@ let cntCarteBanco;
 let soldiNelPortafoglio;
 let puntata;
 const DIM = 18;
-//let cntMano;
 let num_seconda_carta;
 let num_prima_carta;
 let assicurazione = 0;
@@ -12,17 +11,8 @@ let boolAssoAlBanco;
 let boolClickAss = false;
 let bj = false;
 let numAssoPersona = 0;
-//1) gestire la richesta del valore dell'asso
+let ValoreAusiliarioPerFareFunzionareAssoBanco=0;
 //3) funzione smetti di giocare
-//4) La scelta del valore dell'asso tramite alert non è necessaria e appare prima che il giocatore veda la mano, rendendo la scelta complicata,
-//in più manda in loop la pagina. Solitamente si decide di tenere il valore dell'asso in bilico e solo quando l'utente decide di fermarsi gli 
-//si assegna il valore massimo. Ad esempio se ho come mano A2 segnalo al giocatore il punteggio di 13/3. Se sta converto il punteggio in 13, 
-//altrimenti se chiama adeguo di conseguenza. Se esce una carta che non rende possibile il valore 11 per l'asso converto automaticamente l'asso in 1, 
-//altrimenti continuo con la stessa logica. Ad esempio: pesco A2 (mostro 13/3 all'utente), chiamo carta e pesco un 3 (mostro 16/6 all'utente), 
-//chiamo carta e pesco un 9 (l'asso non può valere 11 altrimenti il giocatore sballerebbe, lo converto in 1 mostrando 15 all'utente).
-//5) Dal momento in cui scelgo di assicurarmi se il banco ha blackjack la partita non deve continuare. Gestisco l'assicurazione se è stata giocata e se ho blackjack anch'io
-//riprendo i soldi puntati indietro.
-//6) Cerca di evitare di inserire spazi all'interno di nomi dei file, in alcuni ambienti di programmazione può recare problemi (non in questo caso, però è buona prassi evitare).
 //7) Se decido di smettere di giocare sarebbe meglio dare la possibilità all'utente di iniziare una nuova sessione di gioco, altrimenti tanto vale chiudere la pagina.
 //Comunque direi che molte features anche complesse del gioco sono implementate, cerca di sistemare queste cose e se poi vuoi aggiungi la possibilità di dividere se il giocatore 
 //ha 2 carte uguali (feature complessa, valuta se è fattibile).
@@ -105,7 +95,7 @@ function inizializzaBancoEPrimacarta(div_pers, img, img1pers) {
         return;
     }
 
-    let num_carta = generaNum_Carta();
+    let num_carta = generaNum_Carta();// NUMERO CARTA BANCO
     let simbolo_carta = generaSimbolo_carta();
     let aus = generaStringSimbolo(simbolo_carta);
 
@@ -130,7 +120,7 @@ function inizializzaBancoEPrimacarta(div_pers, img, img1pers) {
     else
         cntCarteBanco = num_carta;
     div_maziere.appendChild(img);
-    num_carta = 1;
+    num_carta = generaNum_Carta();
     simbolo_carta = generaSimbolo_carta();
     aus = generaStringSimbolo(simbolo_carta);
     img1pers.src = `img/${num_carta} ${aus}.jpg`;
@@ -521,23 +511,22 @@ function btnSceltaFermati() {
             // Rimuovi entrambi i bottoni
             divFermoONo.removeChild(btnStop);
             divFermoONo.removeChild(btnAvanti);
-            setTimeout(() => {
-                // Inizia il gioco
-                iniziaGioco();
-            }, 1000);
             let ass = document.getElementById("assicurazione");
             if (ass) {
                 divFermoONo.removeChild(ass);
             }
-            if (numAssoPersona > 0){
-                 let btnAsso = document.createElement("button");
-                 btnAsso.textContent = "Hai pescato un asso";
-                 btnAsso.id = "assoPescato";
-                 btnAsso.className = "bottone";
-                 btnAsso.addEventListener("click", function(){
-                    richiediValAssi("Vuoi mantenere il valore del tuo asso pari a 1 o farlo salire a 11? (inserisci 1 o 11)");
-                 });
-        divFermoONo.appendChild(btnAsso);
+
+            if (numAssoPersona > 0) {
+                let btnAsso = document.createElement("button");
+                btnAsso.textContent = `Hai pescato un asso (${numAssoPersona})`;
+                btnAsso.id = "assoPescato";
+                btnAsso.className = "bottone";
+                btnAsso.addEventListener("click", gestisciClickAsso);
+                ValoreAusiliarioPerFareFunzionareAssoBanco++;
+                divFermoONo.appendChild(btnAsso);
+            }
+            if(ValoreAusiliarioPerFareFunzionareAssoBanco===0){
+                iniziaGioco();
             }
         });
 
@@ -552,6 +541,26 @@ function btnSceltaFermati() {
         });
     }
 }
+
+function gestisciClickAsso() {
+    let scelta = richiediValAssi("Vuoi che uno dei tuoi assi valga 1 o 11? (inserisci 1 o 11)");
+    if (scelta === 11) {
+        cntCartePersona += 10;
+    }
+    numAssoPersona--;
+    this.textContent = `Hai pescato un asso (${numAssoPersona})`;
+
+    let p_Punti = document.getElementById("giocatorePunti");
+    p_Punti.innerText = `il Giocatore: ${cntCartePersona}`;
+
+    // Controlla se tutti gli assi sono stati gestiti
+    if (numAssoPersona === 0) {
+        this.remove();
+        // Solo ora inizia il gioco del banco e l'aggiornamento del portafoglio
+        iniziaGioco();
+    }
+}
+
 function iniziaGioco() {
     let num_carta = generaNum_Carta();
     let simbolo_carta = generaSimbolo_carta();
@@ -565,7 +574,7 @@ function iniziaGioco() {
     }
     else {//altrimenti l'assicurazione viene persa e paga normalmente
         assicurazione = 0;
-        aggiornaPortafoglio(vittoria = true);
+        //aggiornaPortafoglio(vittoria = true);
     }
     // Use the existing ID
     let newIdDiv = document.getElementById("banco"); // Keep using this ID
