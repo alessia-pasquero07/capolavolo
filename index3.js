@@ -12,10 +12,7 @@ let boolClickAss = false;
 let bj = false;
 let numAssoPersona = 0;
 let ValoreAusiliarioPerFareFunzionareAssoBanco=0;
-//3) funzione smetti di giocare
-//7) Se decido di smettere di giocare sarebbe meglio dare la possibilità all'utente di iniziare una nuova sessione di gioco, altrimenti tanto vale chiudere la pagina.
-//Comunque direi che molte features anche complesse del gioco sono implementate, cerca di sistemare queste cose e se poi vuoi aggiungi la possibilità di dividere se il giocatore 
-//ha 2 carte uguali (feature complessa, valuta se è fattibile).
+
 window.addEventListener("load", function () {
     // Chiamata alla funzione per richiedere i soldi
     soldiNelPortafoglio = richiediSoldi("Quanti soldi hai nel portafoglio?");
@@ -404,33 +401,24 @@ function aggiornaPortafoglio(vinto, bj) {
 
 /*SMETTI DI GIOCARE O CONTINUA A GIOCARE */
 function smettiDiGiocare() {
-    let divPunti = document.getElementById("divPunti");
-    let pPortafoglio = document.getElementById("portafoglio");
-    let divBancone = document.getElementById("bancone");
-    let divGettoni = document.getElementById("gettoni");
-    let divBtnScelte = document.getElementById("cosaFaccio");
-    divPunti.remove();
-    pPortafoglio.remove();
-    divBancone.remove();
-    divGettoni.remove();
-    divBtnScelte.remove();
-    let body = document.getElementsByTagName("body")[0];
-    body.style.backgroundImage = "url('img/bodyImg.jfif')";
-    body.style.backgroundSize = "cover"; // Opzionale: adatta l'immagine per coprire l'intero body
-    body.style.backgroundPosition = "center"; // Opzionale: centra l'immagine
-    // Crea un elemento <a>
-    let a = document.createElement("a");
-    a.href = "#"; // Imposta il link che desideri
-    a.style.position = "absolute"; // Posiziona l'elemento in modo assoluto
-    a.style.top = "0"; // Inizia dall'alto
-    a.style.left = "0"; // Inizia da sinistra
-    a.style.width = "100%"; // Larghezza al 100%
-    a.style.height = "100%"; // Altezza al 100%
-    a.style.display = "block"; // Rende l'elemento un blocco per occupare tutto lo spazio
-    a.style.zIndex = "1000"; // Assicurati che il link sia sopra agli altri elementi
-
-    // Aggiungi l'elemento <a> al body
-    body.appendChild(a);
+   document.getElementById("body").innerHTML=` <header id="header">
+        
+    </header>
+    <main id="main">
+        
+        <div id="bancone">
+            <div id="banco">
+                <div id="maziere"></div> <img id="retro_carta" src="img/retro.jpg" alt="">
+            </div>
+            <div id="gettoni"></div>
+            <div id="persona"></div>
+        </div>
+        </div>
+    </main>
+    <footer>
+        <div id="cosaFaccio"><button class="bottone" onclick="window.location.reload();">Torna a giocare</button></div>
+        <div id="esito"></div>
+    </footer>` 
 }
 function nuovaPartita() {
     document.getElementById("esito").innerText = "";
